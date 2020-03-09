@@ -1,27 +1,45 @@
-# PocArchAngular
+# POC de Arquitetura do Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.5.
+POC de uma arquitetura do Angular para projetos, dando opção de fazer pre-loading dos módulos que desejar. Por default é lazy-loading.
 
-## Development server
+## Base
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+O arquivo `src/app/strategies/app-preloading-strategy.ts` é o que faz permitir esta estratégia de carregamento de módulos. Em `app-routing.module.ts`, edite:
 
-## Code scaffolding
+```ts
+RouterModule.forRoot(routes, {
+  preloadingStrategy: AppPreloadingStrategy
+});
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Adicione também em `app.module.ts` o provider para a estratégia:
 
-## Build
+```ts
+providers: [AppPreloadingStrategy],
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Nas rotas que deseja carregar no início da execução do projeto, é só passar na rota:
 
-## Running unit tests
+```ts
+{
+  path: "about",
+  loadChildren: () =>
+    import("./pages/about/about.module").then(
+      m => m.AboutModule
+    ),
+  data: { title: "About", preload: true }
+}
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Gerando os módulos
 
-## Running end-to-end tests
+```sh
+ng g m pages/about --route about --module app.module
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Sendo as variáveis:
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- `ng g m`: Gera módulo
+- `pages/about`: Localização de onde será gerado o módulo + nome (about)
+- `--route about`: Adição da chamada do módulo na rota com o nome que definir (about)
+- `--module app.module`: Define em qual routing será chamado esse módulo (app-routing.module.ts)

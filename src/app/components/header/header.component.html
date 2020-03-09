@@ -1,0 +1,26 @@
+<header>
+  <div class="logo">
+    <div class="menu"></div>
+    <div>Header</div>
+    <div>
+      <button class="menu" (click)="openMenu()" [ngClass]="{ active: opened }">
+        <div></div>
+        <div></div>
+        <div></div>
+      </button>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li *ngFor="let url of routes">
+        <a
+          [routerLink]="url.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: url.path == '' }"
+        >
+          {{ url.data?.title ? url.data?.title : url.path }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

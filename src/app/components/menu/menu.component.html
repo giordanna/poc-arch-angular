@@ -1,0 +1,18 @@
+<aside [ngClass]="{ opened: opened }">
+  <ul>
+    <li class="logo">
+      Header
+    </li>
+    <li *ngFor="let url of routes">
+      <a
+        (click)="closeMenu()"
+        [routerLink]="url.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: url.path == '' }"
+      >
+        {{ url.data?.title ? url.data?.title : url.path }}
+      </a>
+    </li>
+  </ul>
+</aside>
+<div [ngClass]="{ opened: opened }" class="black" (click)="closeMenu()"></div>
